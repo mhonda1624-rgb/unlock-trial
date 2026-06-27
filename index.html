@@ -5,58 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UNLOCK Flipbook</title>
 <style>
-:root{--bg:#efe8dc;--paper:#fffdf8;--ink:#2f2f2f;--accent:#27364a;--line:rgba(0,0,0,.12);--shadow:rgba(0,0,0,.22)}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;display:grid;grid-template-rows:auto 1fr auto}
-header{text-align:center;padding:12px 12px 4px}
-h1{font-size:16px;margin:0;color:var(--accent);letter-spacing:.08em}
-main{min-height:0;display:grid;place-items:center;padding:10px;touch-action:pan-y}
-.book{width:min(96vw,1100px);height:min(72vh,720px);display:grid;grid-template-columns:1fr 1fr;filter:drop-shadow(0 16px 22px var(--shadow));position:relative}
-.book:after{content:"";position:absolute;top:0;bottom:0;left:50%;width:3px;transform:translateX(-50%);background:linear-gradient(to right,rgba(0,0,0,.18),rgba(255,255,255,.55),rgba(0,0,0,.14));pointer-events:none}
-.page{background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;padding:14px}
-.page.left{border-radius:14px 0 0 14px;box-shadow:inset -12px 0 20px rgba(0,0,0,.05)}
-.page.right{border-radius:0 14px 14px 0;box-shadow:inset 12px 0 20px rgba(0,0,0,.05)}
-.page img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
-.blank{width:100%;height:100%;border:1px dashed var(--line);display:grid;place-items:center;color:#8b8378;font-size:14px}
-.toolbar{padding:10px;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
-button{border:0;border-radius:999px;padding:10px 16px;background:var(--accent);color:white;font-size:14px;cursor:pointer;min-height:38px}
-button.secondary{background:white;color:var(--accent);border:1px solid var(--line)}
-button:disabled{opacity:.35;cursor:not-allowed}
-.counter{min-width:100px;text-align:center;font-size:14px;color:#655f58}
-.drawer{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);width:min(94vw,900px);max-height:38vh;overflow:auto;background:white;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 16px 28px var(--shadow);display:none;z-index:10}
-.drawer.open{display:block}
-.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px}
-.thumb{padding:6px;border-radius:10px;border:1px solid var(--line);background:white;color:#655f58;font-size:12px}
-.thumb img{width:100%;aspect-ratio:.72/1;object-fit:contain;display:block;margin-bottom:4px;background:#f7f3ed;border-radius:6px}
-.thumb.active{outline:3px solid var(--accent)}
-.hint{text-align:center;font-size:12px;color:#6c655d;padding:0 12px 10px;line-height:1.5}
-.zoom{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;place-items:center;z-index:20;padding:18px}
-.zoom.open{display:grid}
-.zoom img{max-width:96vw;max-height:92vh;object-fit:contain;background:white;border-radius:10px}
-.zoom button{position:fixed;top:16px;right:16px}
+body{
+  margin:0;
+  background:#efe8dc;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+h1{
+  font-size:18px;
+  color:#27364a;
+  margin:14px 0 8px;
+}
+.viewer{
+  width:min(96vw,1000px);
+  height:72vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:0;
+}
+.page{
+  background:#fffdf8;
+  width:50%;
+  height:100%;
+  border:1px solid rgba(0,0,0,.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+  box-sizing:border-box;
+}
+.page img{
+  max-width:100%;
+  max-height:100%;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.left{border-radius:14px 0 0 14px;}
+.right{border-radius:0 14px 14px 0;}
+.controls{
+  margin:12px 0;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+button{
+  border:0;
+  border-radius:999px;
+  padding:10px 18px;
+  background:#27364a;
+  color:white;
+  font-size:14px;
+}
+button:disabled{opacity:.35}
+#counter{
+  min-width:100px;
+  text-align:center;
+  color:#555;
+}
+.note{
+  font-size:12px;
+  color:#666;
+  text-align:center;
+  padding:0 12px 14px;
+}
 @media(max-width:760px){
-  h1{font-size:14px}
-  .book{width:min(94vw,560px);height:min(73vh,760px);display:block}
-  .book:after{display:none}
-  .page{width:100%;height:100%;border-radius:14px;padding:10px}
-  .page.left{display:none}
-  .page.right{border-radius:14px;box-shadow:none}
-  .counter{order:-1;width:100%}
+  .viewer{
+    width:94vw;
+    height:74vh;
+    display:block;
+  }
+  .page{
+    width:100%;
+    height:100%;
+    border-radius:14px;
+  }
+  .left{display:none;}
 }
 </style>
 </head>
 <body>
-<header><h1 id="bookTitle">UNLOCK Flipbook</h1></header>
-<main id="stage"><div class="book"><div class="page left" id="leftPage"></div><div class="page right" id="rightPage"></div></div></main>
-<div class="toolbar">
-<button id="prevBtn">← 前へ</button><button id="nextBtn">次へ →</button><span class="counter" id="counter"></span>
-<button class="secondary" id="thumbBtn">一覧</button><button class="secondary" id="zoomBtn">拡大</button>
+<h1>UNLOCK Flipbook</h1>
+
+<div class="viewer">
+  <div class="page left" id="left"></div>
+  <div class="page right" id="right"></div>
 </div>
-<div class="hint">スマホでは1ページずつ全ページ表示。PCでは見開き表示です。</div>
-<div class="drawer" id="drawer"><div class="thumbs" id="thumbs"></div></div>
-<div class="zoom" id="zoom"><button id="closeZoom">閉じる</button><img id="zoomImg" alt=""></div>
+
+<div class="controls">
+  <button id="prev">← 前へ</button>
+  <span id="counter"></span>
+  <button id="next">次へ →</button>
+</div>
+
+<div class="note">スマホは1ページ表示、PCは見開き表示です。</div>
+
 <script>
-const title = "UNLOCK Flipbook";
 const images = [
   "pages/01.png",
   "pages/02.png",
@@ -70,31 +120,79 @@ const images = [
   "pages/10.png",
   "pages/11.png"
 ];
-const leftPage=document.getElementById("leftPage"),rightPage=document.getElementById("rightPage"),counter=document.getElementById("counter");
-const prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn"),thumbBtn=document.getElementById("thumbBtn"),zoomBtn=document.getElementById("zoomBtn");
-const drawer=document.getElementById("drawer"),thumbs=document.getElementById("thumbs"),zoom=document.getElementById("zoom"),zoomImg=document.getElementById("zoomImg"),closeZoom=document.getElementById("closeZoom"),stage=document.getElementById("stage");
-document.getElementById("bookTitle").textContent=title;document.title=title;
-let page=0;
-function isMobile(){return matchMedia("(max-width:760px)").matches}
-function content(src){if(!src){const b=document.createElement("div");b.className="blank";b.textContent="空白ページ";return b}const img=document.createElement("img");img.src=src;return img}
-function render(){
-  const mobile=isMobile();leftPage.innerHTML="";rightPage.innerHTML="";
-  if(mobile){rightPage.appendChild(content(images[page]));counter.textContent=(page+1)+" / "+images.length}
-  else{let l=page%2===0?page:page-1;let r=l+1;leftPage.appendChild(content(images[l]));rightPage.appendChild(content(images[r]));counter.textContent=(l+1)+"-"+Math.min(r+1,images.length)+" / "+images.length}
-  prevBtn.disabled=page<=0;nextBtn.disabled=page>=images.length-1;
-  document.querySelectorAll(".thumb").forEach((el,i)=>el.classList.toggle("active",i===page));
+
+let current = 0;
+
+const left = document.getElementById("left");
+const right = document.getElementById("right");
+const counter = document.getElementById("counter");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+
+function isMobile(){
+  return window.matchMedia("(max-width:760px)").matches;
 }
-function next(){if(page<images.length-1){page+=isMobile()?1:2;if(page>=images.length)page=images.length-1;render()}}
-function prev(){if(page>0){page-=isMobile()?1:2;if(page<0)page=0;render()}}
-function go(i){page=i;drawer.classList.remove("open");render()}
-images.forEach((src,i)=>{const b=document.createElement("button");b.className="thumb";b.innerHTML='<img src="'+src+'" alt=""><span>'+(i+1)+'</span>';b.onclick=()=>go(i);thumbs.appendChild(b)});
-prevBtn.onclick=prev;nextBtn.onclick=next;thumbBtn.onclick=()=>drawer.classList.toggle("open");
-zoomBtn.onclick=()=>{zoomImg.src=images[page];zoom.classList.add("open")};closeZoom.onclick=()=>zoom.classList.remove("open");
-zoom.onclick=e=>{if(e.target===zoom)zoom.classList.remove("open")};
-document.addEventListener("keydown",e=>{if(e.key==="ArrowRight")next();if(e.key==="ArrowLeft")prev();if(e.key==="Escape"){drawer.classList.remove("open");zoom.classList.remove("open")}});
-let sx=0,sy=0;stage.addEventListener("touchstart",e=>{sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY},{passive:true});
-stage.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3){dx<0?next():prev()}},{passive:true});
-window.addEventListener("resize",render);render();
+
+function putImage(el, src){
+  el.innerHTML = "";
+  if(!src){
+    el.innerHTML = "";
+    return;
+  }
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = "";
+  img.onerror = function(){
+    el.innerHTML = "画像が見つかりません：" + src;
+  };
+  el.appendChild(img);
+}
+
+function render(){
+  if(isMobile()){
+    putImage(right, images[current]);
+    counter.textContent = (current + 1) + " / " + images.length;
+  }else{
+    const leftIndex = current % 2 === 0 ? current : current - 1;
+    putImage(left, images[leftIndex]);
+    putImage(right, images[leftIndex + 1]);
+    counter.textContent = (leftIndex + 1) + " - " + Math.min(leftIndex + 2, images.length) + " / " + images.length;
+  }
+
+  prev.disabled = current === 0;
+  next.disabled = current >= images.length - 1;
+}
+
+next.onclick = function(){
+  current += isMobile() ? 1 : 2;
+  if(current >= images.length) current = images.length - 1;
+  render();
+};
+
+prev.onclick = function(){
+  current -= isMobile() ? 1 : 2;
+  if(current < 0) current = 0;
+  render();
+};
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "ArrowRight") next.click();
+  if(e.key === "ArrowLeft") prev.click();
+});
+
+let startX = 0;
+document.addEventListener("touchstart", function(e){
+  startX = e.changedTouches[0].clientX;
+}, {passive:true});
+
+document.addEventListener("touchend", function(e){
+  const endX = e.changedTouches[0].clientX;
+  if(startX - endX > 50) next.click();
+  if(endX - startX > 50) prev.click();
+}, {passive:true});
+
+window.addEventListener("resize", render);
+render();
 </script>
 </body>
 </html>
